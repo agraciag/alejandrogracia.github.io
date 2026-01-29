@@ -1,0 +1,81 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+
+const projects = await getCollection('projects');
+// Ordenar por fecha descendente
+const sortedProjects = projects.sort((a, b) => {
+  return new Date(b.data.date || 0).valueOf() - new Date(a.data.date || 0).valueOf();
+});
+---
+
+<Layout title="Proyectos | Alejandro Gracia">
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <div class="mb-8">
+      <a href="/" class="inline-flex items-center text-slate-600 hover:text-slate-900 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+        </svg>
+        Volver a Inicio
+      </a>
+    </div>
+
+    <div class="text-center mb-16">
+      <h1 class="text-4xl md:text-5xl font-bold text-slate-900 mb-6">Proyectos Destacados</h1>
+      <p class="text-xl text-slate-600 max-w-2xl mx-auto">
+        Una selección de trabajos que definen mi trayectoria en arquitectura, gestión y tecnología.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {sortedProjects.map(project => (
+        <a href={`/proyectos/${project.id}`} class="group block bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
+          <div class="aspect-video overflow-hidden relative bg-slate-100">
+            {project.data.cover ? (
+              <Image 
+                src={project.data.cover} 
+                alt={project.data.coverAlt || project.data.title}
+                class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                width={800}
+                quality={80}
+              />
+            ) : (
+              <div class="w-full h-full flex items-center justify-center text-slate-400">
+                <span class="text-4xl">🏗️</span>
+              </div>
+            )}
+            
+            {/* Overlay on hover */}
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition duration-300"></div>
+          </div>
+          
+          <div class="p-6">
+            <div class="flex flex-wrap gap-2 mb-3">
+              {project.data.tags?.slice(0, 3).map(tag => (
+                <span class="text-xs font-semibold px-2 py-1 bg-blue-50 text-blue-700 rounded-md uppercase tracking-wide">
+                  {tag}
+                </span>
+              ))}
+            </div>
+            
+            <h3 class="text-xl font-bold text-slate-900 mb-2 group-hover:text-blue-700 transition">
+              {project.data.title}
+            </h3>
+            
+            <p class="text-slate-600 text-sm line-clamp-3 mb-4">
+              {project.data.description}
+            </p>
+            
+            <div class="flex items-center text-sm font-medium text-blue-600">
+              Ver caso de estudio
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 group-hover:translate-x-1 transition" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </main>
+</Layout>
