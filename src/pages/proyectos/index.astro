@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import { Image } from 'astro:assets';
 
-const projects = await getCollection('projects');
+const projects = await getCollection('projects', ({ data }) => data.status === 'public');
 // Ordenar por fecha descendente
 const sortedProjects = projects.sort((a, b) => {
   return new Date(b.data.date || 0).valueOf() - new Date(a.data.date || 0).valueOf();

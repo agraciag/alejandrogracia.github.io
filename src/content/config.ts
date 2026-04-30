@@ -12,6 +12,7 @@ const projects = defineCollection({
     cover: image().optional(),
     coverAlt: z.string().optional(),
     featured: z.boolean().default(false),
+    status: z.enum(['public', 'review']).default('public'),
   }),
 });
 
