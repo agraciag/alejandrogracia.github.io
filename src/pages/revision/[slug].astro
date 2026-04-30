@@ -1,0 +1,28 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import ProjectDetail from '../../components/ProjectDetail.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects', ({ data }) => data.status === 'review');
+  return projects.map(project => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+---
+
+<Layout title={`${project.data.title} | Revisión | Alejandro Gracia`}>
+  <ProjectDetail project={project} breadcrumb={{ href: '/', label: 'Inicio' }}>
+    <div slot="banner" class="bg-amber-50 border-b border-amber-200 text-amber-900">
+      <div class="max-w-4xl mx-auto px-4 py-3 text-sm flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>Documento en revisión &mdash; no compartir.</span>
+      </div>
+    </div>
+  </ProjectDetail>
+</Layout>
